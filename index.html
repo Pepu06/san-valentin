@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Amor ❤️</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+        .background-slideshow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+        .background-slideshow img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 2s ease-in-out;
+            transform: translate(-50%, -50%);
+        }
+        @media (orientation: portrait) {
+            .background-slideshow img {
+                width: 100%;
+                height: auto;
+                min-height: 100%;
+            }
+        }
+        @media (orientation: landscape) {
+            .background-slideshow img {
+                width: auto;
+                height: 100%;
+                min-width: 100%;
+            }
+        }
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255, 107, 107, 0.3), rgba(255, 142, 142, 0.3));
+            z-index: -1;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            margin: 1rem;
+            max-width: 90%;
+        }
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            .message {
+                font-size: 1.1rem;
+            }
+            .btn {
+                padding: 0.8rem 2rem;
+                font-size: 1rem;
+            }
+            .container {
+                padding: 1.5rem;
+            }
+        }
+        h1 {
+            color: #ff4b6e;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+        .buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        .btn {
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .btn-yes {
+            background: #ff4b6e;
+            color: white;
+        }
+        .btn-no {
+            background: #gray;
+            color: #333;
+            position: relative;
+        }
+        .btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .hearts {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .heart {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: float 4s ease-in-out infinite;
+            opacity: 0;
+        }
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) scale(1);
+                opacity: 0;
+            }
+        }
+        .message {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-slideshow" id="slideshow"></div>
+    <div class="background-overlay"></div>
+    <div class="hearts" id="hearts"></div>
+    <div class="container">
+        <h1>Mi Amor ❤️</h1>
+        <div class="message">
+            Cada día a tu lado es un regalo, y quiero hacer este San Valentín especial contigo.<br>
+            ¿Me concederías el honor de ser mi San Valentín?
+        </div>
+        <div class="buttons">
+            <button class="btn btn-yes" onclick="accepted()">¡Sí! 😊</button>
+            <button class="btn btn-no" id="noBtn">No 😢</button>
+        </div>
+    </div>
+
+    <script>
+        // Create floating hearts
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            document.getElementById('hearts').appendChild(heart);
+            setTimeout(() => heart.remove(), 4000);
+        }
+
+        setInterval(createHeart, 300);
+
+        // Photo slideshow
+        const photos = [
+            'fotos/2964995f-d9b9-45f2-91cc-e0fd0bae8b23.JPG',
+            'fotos/4853f883-5191-4ed9-ae65-dc851daf39e4.JPG',
+            'fotos/52e4847b-8210-4f89-ae7a-a86cf3cbe34f.JPG',
+            'fotos/6c854b5f-3ae6-46f9-8a9b-bcbe5ac984f0.JPG',
+            'fotos/9C5D9594-1F53-480F-A237-57CD5D9A4E3B.JPG',
+            'fotos/DSCN4800.JPEG',
+            'fotos/DSCN4857.JPEG'
+        ];
+
+        const slideshow = document.getElementById('slideshow');
+        let currentPhotoIndex = 0;
+
+        function loadPhotos() {
+            photos.forEach((photo, index) => {
+                const img = document.createElement('img');
+                img.src = photo;
+                img.style.opacity = index === 0 ? '1' : '0';
+                slideshow.appendChild(img);
+            });
+        }
+
+        function nextPhoto() {
+            const images = slideshow.getElementsByTagName('img');
+            images[currentPhotoIndex].style.opacity = '0';
+            currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
+            images[currentPhotoIndex].style.opacity = '1';
+        }
+
+        loadPhotos();
+        setInterval(nextPhoto, 5000);
+
+        // Make the "No" button run away
+        const noBtn = document.getElementById('noBtn');
+        noBtn.addEventListener('mouseover', () => {
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = Math.random() * (window.innerWidth - noBtn.offsetWidth) + 'px';
+            noBtn.style.top = Math.random() * (window.innerHeight - noBtn.offsetHeight) + 'px';
+        });
+
+        function accepted() {
+            alert('¡Me haces la persona más feliz del mundo! ❤️');
+            // Create a burst of hearts
+            for(let i = 0; i < 20; i++) {
+                setTimeout(createHeart, i * 100);
+            }
+        }
+    </script>
+</body>
+</html>
